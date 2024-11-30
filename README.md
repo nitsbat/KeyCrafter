@@ -1,7 +1,7 @@
 # Introduction
-KeyCrafter is a random password generator designed to prioritize security and convenience. It enables users to create strong, unique passwords for their online accounts, ensuring robust protection against cyber threats.
+[KeyCrafter](https://keycrafter-1.onrender.com/) is a random password generator designed to prioritize security and convenience. It enables users to create strong, unique passwords for their online accounts, ensuring robust protection against cyber threats.
 
-The site demo is deployed through render app (limited memory and functionality) -> https://keycrafter-1.onrender.com/
+The site demo is deployed through render app (limited memory and functionality) [KeyCrafter](https://keycrafter-1.onrender.com/)
 
 Mail to 3498georgian@gmail.com if you want to contribute.
 

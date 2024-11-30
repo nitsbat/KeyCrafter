@@ -1,35 +1,92 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
 
 function App() {
+  const [isNumberAllowed, setNumber] = useState(false);
+  const [isCharAllowed, setCharacters] = useState(false);
+  const [length, setLength] = useState(6);
+  const [password, setPassword] = useState('');
+  const passwordRef = useRef(null);
+
+  const passwordGenerator = useCallback(() => {
+    const alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const numbers = '0123456789';
+    const specialChars = '!@#$%^&*()_-+=<>?';
+    let letters = alphabets
+
+    if (isNumberAllowed) {
+      letters += numbers;
+    }
+    if (isCharAllowed) {
+      letters += specialChars;
+    }
+    let password = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * letters.length);
+      password += letters[randomIndex];
+    }
+    setPassword(password);
+  }, [isNumberAllowed, isCharAllowed, length]);
+
+  const copyText = () => {
+    passwordRef.current?.select();
+    window.navigator.clipboard.writeText(password)
+  }
+
+  useEffect(() => {
+    passwordGenerator()
+  }, [length, isNumberAllowed, isCharAllowed, passwordGenerator])
+
   return (
-    <div className="bg-black min-h-screen flex justify-center items-center">
-      <div className="flex flex-col justify-center items-center h-fit bg-gray-400 p-2 rounded-lg shadow-lg">
-        <label htmlFor="textInput" className="text-black font-semibold mb-4 underline">Random Password Generator 🔒</label>
+    <div className="bg-black min-h-screen flex justify-center items-center p-4">
+      <div className="flex flex-col justify-center items-center bg-gray-400 p-4 rounded-lg shadow-lg max-w-xs w-full">
+        <label htmlFor="textInput" className="text-black font-semibold text-sm mb-3 underline">Random Password Generator 🔒</label>
         <input
-          id="textInput"
+          id="text"
           type="text"
           placeholder="random password..."
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          readOnly
+          value={password}
+          ref={passwordRef}
+          className="px-2 py-1 mb-4 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
-        <div className="flex items-center mt-5">
-          <input type='range' className='px-4 px-2 mr-1' />
-          <label htmlFor='range' className='px-4 px-2 mr-4'>Length(6)</label>
+        <button onClick={copyText} className='outline-none bg-blue-600 px-3 py-0.5 shrink-0 mb-2'>Copy</button>
+        <div className="flex items-center justify-between w-full mb-4">
           <input
-            id="checkbox"
-            type="checkbox"
-            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 "
+            type="range"
+            min={1}
+            max={99}
+            value={length}
+            onChange={(e) => setLength(e.target.value)}
+            className="flex-grow px-2 mr-1 cursor-pointer"
           />
-          <label htmlFor="checkbox" className="ml-2 text-black mr-4">Numbers</label>
-
-          <input
-            id="checkbox"
-            type="checkbox"
-            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-          />
-          <label htmlFor="checkbox" className="ml-2 text-black">Characters</label>
+          <label htmlFor="range" className="text-sm">Length ({length})</label>
+        </div>
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center">
+            <input
+              id="checkbox1"
+              type="checkbox"
+              defaultChecked={isNumberAllowed}
+              onChange={() => { setNumber((prev) => !prev) }}
+              className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <label htmlFor="checkbox1" className="ml-2 text-sm text-black">Numbers</label>
+          </div>
+          <div className="flex items-center">
+            <input
+              id="checkbox2"
+              type="checkbox"
+              defaultChecked={isCharAllowed}
+              onChange={() => { setCharacters((prev) => !prev) }}
+              className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <label htmlFor="checkbox2" className="ml-2 text-sm text-black">Characters</label>
+          </div>
         </div>
       </div>
     </div>
+
   );
 }
 
